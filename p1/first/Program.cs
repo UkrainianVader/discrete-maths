@@ -11,7 +11,7 @@ public class Program
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-        string header = " a b c | a→b | b→c | c→a | (b→c)→(c→a) | F";
+        string header = " a b c | a→b | b→c | c→a | (b→c)→(c→a) | (a → b) → ((b → c) → (c → a))";
         Console.WriteLine(header);
         Console.WriteLine(new string('-', header.Length));
 
