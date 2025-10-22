@@ -64,11 +64,11 @@ class Program
         int block3_start = 50;
 
         // Малюємо блоки
-        DrawParallelBlock(midY, block1_start, "a", "b");   // Блок (a+b)
-        DrawParallelBlock(midY, block2_start, "b", "c");   // Блок (b+c)
-        DrawParallelBlock(midY, block3_start, "a'", "c");  // Блок (ā+c)
+        DrawParallelBlock(midY, block1_start, "a", "b");   // Блок (a+b)
+        DrawParallelBlock(midY, block2_start, "b", "c");   // Блок (b+c)
+        DrawParallelBlock(midY, block3_start, "a'", "c");  // Блок (ā+c)
 
-        // З'єднувальні лінії між блоками
+        // З'єднувальні лінії між блоками (послідовне з'єднання)
         Put(midY, 0, "Вхід -----");
         Put(midY, 22, "--------");
         Put(midY, 42, "--------");
@@ -82,12 +82,14 @@ class Program
             Console.WriteLine();
         }
 
-        // === Аналіз схеми (Таблиця істинності) ===
+        // --- Оновлений аналіз схеми (Таблиця істинності) ---
         Console.WriteLine("\n\nАналіз схеми та таблиця істинності");
-        Console.WriteLine("Формула: (a ∨ b) ∧ (b ∨ c) ∧ (¬a ∨ c)");
-        Console.WriteLine("------------------------------------------");
-        Console.WriteLine(" a | b | c | Y (Результат) | Стан схеми");
-        Console.WriteLine("------------------------------------------");
+        Console.WriteLine("Формула: Y = (a ∨ b) ∧ (b ∨ c) ∧ (¬a ∨ c)");
+        
+        // Оновлений заголовок таблиці
+        Console.WriteLine("----------------------------------------------------------------");
+        Console.WriteLine(" a | b | c | (a+b) | (b+c) | (ā+c) |     (a+b)(b+c)(ā+c) ");
+        Console.WriteLine("----------------------------------------------------------------");
 
         for (int a_val = 0; a_val <= 1; a_val++)
         for (int b_val = 0; b_val <= 1; b_val++)
@@ -97,13 +99,23 @@ class Program
             bool b = b_val == 1;
             bool c = c_val == 1;
 
-            // Обчислюємо результат за логічною формулою
-            bool Y = (a || b) && (b || c) && (!a || c);
-            int result = Y ? 1 : 0;
-            string state = Y ? "Замкнена" : "Розімкнена";
+            // Обчислення проміжних результатів (кожної дужки)
+            bool P1 = a || b;   // (a+b)
+            bool P2 = b || c;   // (b+c)
+            bool P3 = !a || c;  // (ā+c)
 
-            Console.WriteLine($" {a_val} | {b_val} | {c_val} |       {result}       | {state}");
+            // Обчислюємо кінцевий результат (кон'юнкція трьох дужок)
+            bool Y = P1 && P2 && P3; 
+            
+            // Перетворення булевих значень на 0 або 1
+            int res_P1 = P1 ? 1 : 0;
+            int res_P2 = P2 ? 1 : 0;
+            int res_P3 = P3 ? 1 : 0;
+            int result_Y = Y ? 1 : 0;
+            
+            // Форматоване виведення рядка таблиці
+            Console.WriteLine($" {a_val} | {b_val} | {c_val} |   {res_P1}   |   {res_P2}   |   {res_P3}   |           {result_Y}           ");
         }
-        Console.WriteLine("------------------------------------------");
+        Console.WriteLine("----------------------------------------------------------------");
     }
 }
