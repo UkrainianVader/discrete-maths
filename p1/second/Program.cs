@@ -9,12 +9,11 @@ class Program
         Console.OutputEncoding = Encoding.UTF8;
         Console.InputEncoding = Encoding.UTF8;
 
-        var dnfTerms = new List<string>();
-        var cnfClauses = new List<string>();
+        var dnfparts = new List<string>();
+        var cnfparts = new List<string>();
 
-        Console.WriteLine("Введіть F (0 або 1).");
         Console.WriteLine("a b c | F");
-        Console.WriteLine("--------------");
+        Console.WriteLine("----------");
 
         for (int i = 0; i < 8; i++)
         {
@@ -43,7 +42,7 @@ class Program
                               (a ? "a" : "¬a") + " ∧ " +
                               (b ? "b" : "¬b") + " ∧ " +
                               (c ? "c" : "¬c") + ")";
-                dnfTerms.Add(term);
+                dnfparts.Add(term);
             }
             else
             {
@@ -51,12 +50,31 @@ class Program
                                 (a ? "¬a" : "a") + " ∨ " +
                                 (b ? "¬b" : "b") + " ∨ " +
                                 (c ? "¬c" : "c") + ")";
-                cnfClauses.Add(clause);
+                cnfparts.Add(clause);
             }
         }
 
-        string dnf = dnfTerms.Count > 0 ? string.Join(" ∨ ", dnfTerms) : "0";
-        string cnf = cnfClauses.Count > 0 ? string.Join(" ∧ ", cnfClauses) : "1";
+        string dnf;
+
+        if (dnfparts.Count > 0)
+        {
+            dnf = string.Join(" ∨ ", dnfparts);
+        }
+        else
+        {
+            dnf = "0";
+        }
+
+        string cnf;
+
+        if (cnfparts.Count > 0)
+        {
+            cnf = string.Join(" ∧ ", cnfparts);
+        }
+        else
+        {
+            cnf = "1";
+        }
 
         Console.WriteLine();
         Console.WriteLine("ДДНФ: " + dnf);
