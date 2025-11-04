@@ -19,27 +19,50 @@ class Program
         Console.WriteLine(" }");
     }
 
+    static HashSet<string> InputAndValidateSet(string name, HashSet<string> universalSet)
+    {
+        HashSet<string> currentSet;
+        List<string> invalidElements;
+
+        do
+        {
+            currentSet = InputSet(name);
+
+            invalidElements = currentSet.Except(universalSet).ToList();
+
+            if (invalidElements.Any())
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"ПОМИЛКА: Елементи {{ {string.Join(", ", invalidElements)} }} відсутні в універсальній множині U.");
+                Console.WriteLine($"Будь ласка, введіть множину {name} ще раз.");
+                Console.ResetColor();
+            }
+
+        } while (invalidElements.Any());
+
+        return currentSet;
+    }
+
     static void Main()
     {
         Console.OutputEncoding = Encoding.UTF8;
         Console.InputEncoding = Encoding.UTF8;
 
-        Console.WriteLine("Обчислення виразу: A \\ (B ∪ C)'\n");
 
         HashSet<string> U = InputSet("U ");
-        HashSet<string> A = InputSet("A");
-        HashSet<string> B = InputSet("B");
-        HashSet<string> C = InputSet("C");
+
+        HashSet<string> A = InputAndValidateSet("A", U);
+        HashSet<string> B = InputAndValidateSet("B", U);
+        HashSet<string> C = InputAndValidateSet("C", U);
 
         //Об'єднання B і C
         HashSet<string> unionBC = new HashSet<string>(B.Union(C));
 
-        //Доповнення (B ∪ C)
+        //Доповнення (B ∪ C) до U
         HashSet<string> complementUnionBC = new HashSet<string>(U.Except(unionBC));
 
         //Різниця A і доповнення (B ∪ C)
         HashSet<string> result = new HashSet<string>(A.Except(complementUnionBC));
-
         Console.WriteLine("\nРезультати:");
         PrintSet("U", U);
         PrintSet("A", A);
